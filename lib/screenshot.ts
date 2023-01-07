@@ -19,7 +19,7 @@ export default async function screenshot(
     : {
         args: [],
         executablePath:
-          "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+          "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe", //in development replace this with the path to your chrome.exe
       };
   const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
