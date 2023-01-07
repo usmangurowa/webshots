@@ -5,7 +5,7 @@
 Clone this repository and install with the following command:
 
 ```bash
-npx install --force
+npm install --force
 ```
 
 Open `lib/screenshot.ts` and change `executablePath` to your chrome installation directory:
