@@ -6,6 +6,7 @@ const fs = require("fs");
 
 type Data = {
   image: string | Buffer | null;
+  link?: string;
   message: string;
 };
 
@@ -23,7 +24,7 @@ export default async function handler(
     width?: number;
     height?: number;
     quality?: number;
-    type?: "png" | "jpeg" | "webp" | undefined;
+    type?: "png" | "jpeg" | undefined;
     url?: string;
   } = req.query;
 
@@ -35,17 +36,18 @@ export default async function handler(
     return res.status(400).json({ message: "Invalid URL", image: null });
   }
   try {
-    let image = await screenshot(url?.toString() || `${process.env.WEB_URL}`, {
+    const img = await screenshot(url?.toString() || `${process.env.WEB_URL}`, {
       height,
       quality,
       type,
       width,
     });
-    image = image.toString("base64");
+    const image = img.toString("base64");
     const id = nanoid();
     fs.writeFileSync(`./public/images/${id}.${type || "png"}`, image, "base64");
     res.status(200).json({
-      image: `${process.env.WEB_URL}/images/${id}.${type || "png"}`,
+      image: `/images/${id}.${type || "png"}`,
+      link: `${req.headers["host"]}/images/${id}.${type || "png"}`,
       message: "Here is your shot",
     });
   } catch (error: any) {

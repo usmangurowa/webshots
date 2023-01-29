@@ -1,25 +1,24 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import React, { Suspense } from "react";
 
 const Home: NextPage = () => {
   const [url, setUrl] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [weburl, setWeburl] = React.useState<string>("");
+  const [webUrl, setWebUrl] = React.useState<string>("");
   const [screenShot, setScreenShot] = React.useState<string>("");
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      setWeburl(window.location.href);
+      setWebUrl(window.location.href);
     }
   }, []);
 
   const handleGetScreenshot = () => {
     setLoading(true);
 
-    fetch("http://localhost:3000/api/screenshot?url=" + url)
+    fetch("/api/screenshot?url=" + url)
       .then((res) => res.json())
       .then((data) => {
         setScreenShot(data?.image);
@@ -83,7 +82,7 @@ const Home: NextPage = () => {
             <p className="text-lg">
               Or make a get request to this endpoint{" "}
               <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-                {weburl}api/screenshot?url={url}
+                {webUrl}api/screenshot?url={url}
               </code>{" "}
             </p>
           </Suspense>
