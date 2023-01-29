@@ -4,6 +4,7 @@ import FormData from "form-data";
 import { createReadStream, unlinkSync, writeFileSync } from "fs";
 import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
+import validUrl from "valid-url";
 import screenshot from "../../lib/screenshot";
 
 type Data = {
@@ -29,13 +30,14 @@ export default async function handler(
     url?: string;
   } = req.query;
 
-  if (
-    !url
-      ?.toString()
-      .match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/)
-  ) {
+  if (!url) {
+    return res.status(400).json({ message: "URL is required", image: null });
+  }
+
+  if (!validUrl.isUri(url)) {
     return res.status(400).json({ message: "Invalid URL", image: null });
   }
+
   try {
     const img = await screenshot(url?.toString() || `${process.env.WEB_URL}`, {
       height,
