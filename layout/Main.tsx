@@ -9,7 +9,7 @@ const Main = ({
   className?: string;
 }) => {
   return (
-    <div className=" min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col justify-between">
       <Nav />
       <main className={`flex-grow container ${className}`}>{children}</main>
       <Footer />
