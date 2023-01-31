@@ -1,32 +1,29 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import React, { Suspense } from "react";
+import React from "react";
 import { Loader, Footer } from "../components";
 import { MainLayout } from "../layout";
 import { checkUrl, debounce } from "../lib/helper";
+import { saveAs } from "file-saver";
 
 const Home: NextPage = () => {
-  const [url, setUrl] = React.useState<string>("");
+  const [url, setUrl] = React.useState<string>("https://");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [webUrl, setWebUrl] = React.useState<string>("");
+
   const [screenShot, setScreenShot] = React.useState<string>("");
   const [error, setError] = React.useState<string>("");
 
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      setWebUrl(window.location.href);
-    }
-  }, []);
-
-  const saveImage = () => {
-    const a = document.createElement("a");
-    a.href = screenShot;
-    a.download = "screenshot.png";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+  const handleClear = () => {
+    setScreenShot("");
+    setUrl("https://");
   };
+
+  const saveImage = React.useCallback(() => {
+    if (screenShot) {
+      saveAs(screenShot, screenShot.split("/").pop());
+    }
+  }, [screenShot]);
 
   const handleGetScreenshot = () => {
     if (checkUrl(url)) {
@@ -80,6 +77,8 @@ const Home: NextPage = () => {
                 handleGetScreenshot();
               }
             }}
+            type="url"
+            placeholder="https://"
             onChange={(event) => setUrl(event.target.value)}
             className={`w-full p-5 md:p-10 outline-none border  rounded-l-2xl ${
               !!error
@@ -101,23 +100,29 @@ const Home: NextPage = () => {
         {error && <p className="text-red-500">{error}</p>}
         {screenShot && (
           <>
-            <div className="h-80 w-full relative my-5 md:max-w-2xl">
+            <div className="h-80 w-full relative my-3 md:my-5 md:max-w-2xl">
               <Image
                 className="object-contain"
                 src={screenShot}
-                alt={""}
+                alt={"screenshot"}
                 // layout="fill"
                 fill
               />
             </div>
-            <button
-              className="my-2 active:scale-105 transition-transform duration-200 ease-in w-fit px-10 py-2 outline-none border border-primary text-white bg-primary rounded-full"
-              // onClick={saveImage}
-            >
-              <a href={screenShot} download="screenshot.png">
+            <div className="flex items-center justify-center space-x-2">
+              <button
+                className="my-2 active:scale-105 transition-transform duration-200 ease-in w-fit px-10 py-2 outline-none border border-primary text-white bg-primary rounded-full"
+                onClick={saveImage}
+              >
                 Save
-              </a>
-            </button>
+              </button>
+              <button
+                className="my-2 active:scale-105 transition-transform duration-200 ease-in w-fit px-10 py-2 outline-none border border-primary text-white bg-primary rounded-full"
+                onClick={handleClear}
+              >
+                Clear
+              </button>
+            </div>
           </>
         )}
       </MainLayout>
