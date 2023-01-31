@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: "Itim", cursive;
+}
+
+a:hover {
+  @apply text-primary;
+}
