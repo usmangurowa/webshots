@@ -41,7 +41,10 @@ export const downloadImage = async (
   filename: string | undefined
 ) => {
   // convert image url to blob
-  const blob = await fetch(url).then((r) => r.blob());
+
+  const blob = await fetch(url.replace("http:", "https:")).then((r) =>
+    r.blob()
+  );
   // create file object
   const file = new File([blob], filename || "screenshot", {
     type: "image/png",
