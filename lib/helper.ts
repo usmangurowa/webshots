@@ -1,3 +1,5 @@
+import { saveAs } from "file-saver";
+
 // regex to check if url is valid
 const regex = new RegExp(
   "^(https?:\\/\\/)?" + // protocol
@@ -32,4 +34,18 @@ export const debounce = (fn: any, ms = 0) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => fn(...args), ms);
   };
+};
+
+export const downloadImage = async (
+  url: string,
+  filename: string | undefined
+) => {
+  // convert image url to blob
+  const blob = await fetch(url).then((r) => r.blob());
+  // create file object
+  const file = new File([blob], filename || "screenshot", {
+    type: "image/png",
+  });
+  // download file
+  saveAs(file);
 };

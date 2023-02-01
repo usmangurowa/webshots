@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { Loader, Footer } from "../components";
 import { MainLayout } from "../layout";
-import { checkUrl, debounce } from "../lib/helper";
+import { checkUrl, debounce, downloadImage } from "../lib/helper";
 import { saveAs } from "file-saver";
 
 const Home: NextPage = () => {
@@ -21,7 +21,8 @@ const Home: NextPage = () => {
 
   const saveImage = React.useCallback(() => {
     if (screenShot) {
-      saveAs(screenShot, screenShot.split("/").pop());
+      // saveAs(screenShot, screenShot.split("/").pop());
+      downloadImage(screenShot, screenShot.split("/").pop());
     }
   }, [screenShot]);
 
